@@ -41,8 +41,6 @@ type IOpenStack interface {
 }
 
 type OpenStack struct {
-	compute      *gophercloud.ServiceClient
-	blockstorage *gophercloud.ServiceClient
 	sharestorage *gophercloud.ServiceClient
 }
 
@@ -146,18 +144,6 @@ func GetOpenStackProvider() (IOpenStack, error) {
 			return nil, err
 		}
 
-		// Init Nova ServiceClient
-        computeclient, err := openstack.NewComputeV2(provider, epOpts)
-		if err != nil {
-                computeclient = nil
-		}
-
-		// Init Cinder ServiceClient
-		blockstorageclient, err := openstack.NewBlockStorageV3(provider, epOpts)
-		if err != nil {
-                computeclient = nil
-		}
-
 		// Init Cinder ServiceClient
 		sharestorageclient, err := openstack.NewSharedFileSystemV2(provider, epOpts)
 		if err != nil {
@@ -166,8 +152,6 @@ func GetOpenStackProvider() (IOpenStack, error) {
 
 		// Init OpenStack
 		OsInstance = &OpenStack{
-			compute:      computeclient,
-			blockstorage: blockstorageclient,
             sharestorage: sharestorageclient,
 		}
 	}
